@@ -1,0 +1,20 @@
+import { createGroq } from '@ai-sdk/groq';
+import { streamText } from 'ai';
+
+const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const result = streamText({
+    model: groq('llama-3.3-70b-versatile'),
+    system: `You are a helpful assistant on the portfolio website of [Your Name].
+    
+    About me: [fill in your info here]
+    
+    Keep answers friendly and concise. If unsure, invite them to get in touch.`,
+    messages,
+  });
+
+  return result.toDataStreamResponse();
+}
