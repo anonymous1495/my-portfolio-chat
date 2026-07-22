@@ -8,13 +8,9 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: groq('llama-3.3-70b-versatile'),
-    system: `You are a helpful assistant on the portfolio website of [Your Name].
-    
-    About me: [fill in your info here]
-    
-    Keep answers friendly and concise. If unsure, invite them to get in touch.`,
+    system: `You are a helpful assistant on the portfolio website of [Your Name].`,
     messages,
   });
 
-  return result.toDataStreamResponse();
+  return result.toTextStreamResponse(); // ← changed from toDataStreamResponse
 }
