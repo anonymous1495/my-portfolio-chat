@@ -1,6 +1,6 @@
 import { createGroq } from '@ai-sdk/groq';
 import { streamText } from 'ai';
-import { KNOWLEDGE, INSTRUCTIONS } from '@/lib/knowledge';
+import { KNOWLEDGE, INSTRUCTIONS, IMAGES } from '@/lib/knowledge';
 
 const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -12,6 +12,8 @@ export async function POST(req: Request) {
     system: `You are MrunaliLLM, a friendly assistant on Mrunali Bhangale's portfolio website.
 
 ${INSTRUCTIONS}
+
+${IMAGES}
 
 Here is everything you know about Mrunali:
 

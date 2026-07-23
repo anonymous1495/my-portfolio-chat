@@ -7,7 +7,49 @@ const STARTERS = [
   'What projects has Mrunali worked on?',
   'How does Mrunali integrate AI in her design workflow?',
   "What's Mrunali's background?",
+  "Show me images of Mrunali's work.",
+  'What is Mrunali currently working on?',
+  'How can I contact Mrunali?',
 ];
+
+const VALID_IMAGES = [
+  '/projects/watercolour_face_art.png',
+  '/projects/oil_pastels_face_art.png',
+  '/projects/pencil_sketch_face_art.png',
+];
+
+function MessageContent({ text }: { text: string }) {
+  const parts = text.split(/(\[\[image:[^\]]+\]\])/g);
+
+  return (
+    <>
+      {parts.map((part, i) => {
+        const match = part.match(/^\[\[image:([^\]]+)\]\]$/);
+        if (!match) {
+          return part ? <span key={i}>{part}</span> : null;
+        }
+
+        const src = match[1].trim();
+        if (!VALID_IMAGES.includes(src)) return null;
+
+        return (
+          <img
+            key={i}
+            src={src}
+            alt=""
+            style={{
+              display: 'block',
+              width: '100%',
+              borderRadius: 12,
+              margin: '10px 0',
+              border: '1px solid #eee',
+            }}
+          />
+        );
+      })}
+    </>
+  );
+}
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -120,7 +162,7 @@ export default function Chat() {
                 whiteSpace: 'pre-wrap',
               }}
             >
-              {m.content}
+              <MessageContent text={m.content} />
             </div>
           </div>
         ))}
