@@ -1,16 +1,18 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import {
+  STARTER_SUGGESTIONS,
+  getFollowUps,
+  getNode,
+  matchQuestion,
+  type Suggestion,
+} from '@/lib/scripted-flow';
 
 type Message = { role: 'user' | 'assistant'; content: string };
 
-const STARTERS = [
-  'What projects has Mrunali worked on?',
-  'How does Mrunali integrate AI in her design workflow?',
-  "What's Mrunali's background?",
-  "Show me images of Mrunali's work.",
-  'What is Mrunali currently working on?',
-  'How can I contact Mrunali?',
-];
+// Scripted answers are instant, so hold them briefly behind "Thinking…" to
+// match the pace of a real reply.
+const SCRIPTED_REPLY_DELAY_MS = 1000;
 
 const VALID_IMAGES = [
   '/projects/watercolour_face_art.png',
@@ -55,7 +57,8 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const visitedNodes = useRef(new Set<string>());
 
   const fetchSuggestions = async (convo: Message[]) => {
     try {
@@ -65,13 +68,13 @@ export default function Chat() {
         body: JSON.stringify({ messages: convo }),
       });
       const data = await res.json();
-      setSuggestions(data.questions ?? []);
+      setSuggestions((data.questions ?? []).map((label: string) => ({ label })));
     } catch {
       setSuggestions([]);
     }
   };
 
-  const sendMessage = async (text?: string) => {
+  const sendMessage = async (text?: string, nodeId?: string) => {
     const content = (text ?? inputValue).trim();
     if (!content || isLoading) return;
 
@@ -80,6 +83,31 @@ export default function Chat() {
     setInputValue('');
     setSuggestions([]);
     setIsLoading(true);
+
+    // Scripted path: answer straight from lib/scripted-flow.json, no model call.
+    const scriptedId = nodeId ?? matchQuestion(content);
+    const scriptedNode = scriptedId ? getNode(scriptedId) : undefined;
+
+    if (scriptedId && scriptedNode) {
+      visitedNodes.current.add(scriptedId);
+      await new Promise(resolve => setTimeout(resolve, SCRIPTED_REPLY_DELAY_MS));
+
+      const withReply: Message[] = [
+        ...updatedMessages,
+        { role: 'assistant', content: scriptedNode.answer },
+      ];
+      setMessages(withReply);
+      setIsLoading(false);
+
+      const followUps = getFollowUps(scriptedId, visitedNodes.current);
+      if (followUps.length > 0) {
+        setSuggestions(followUps);
+      } else {
+        // End of the scripted branch — hand the conversation back to the model.
+        fetchSuggestions(withReply);
+      }
+      return;
+    }
 
     try {
       const response = await fetch('/api/chat', {
@@ -132,9 +160,9 @@ export default function Chat() {
               Hey there, I&apos;m MrunaliLLM.
             </h1>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
-              {STARTERS.map(q => (
-                <button key={q} onClick={() => sendMessage(q)} style={chipStyle}>
-                  {q}
+              {STARTER_SUGGESTIONS.map(s => (
+                <button key={s.nodeId} onClick={() => sendMessage(s.label, s.nodeId)} style={chipStyle}>
+                  {s.label}
                 </button>
               ))}
             </div>
@@ -173,9 +201,13 @@ export default function Chat() {
 
         {!isLoading && suggestions.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
-            {suggestions.map(q => (
-              <button key={q} onClick={() => sendMessage(q)} style={{ ...chipStyle, fontSize: 13 }}>
-                {q}
+            {suggestions.map(s => (
+              <button
+                key={s.nodeId ?? s.label}
+                onClick={() => sendMessage(s.label, s.nodeId)}
+                style={{ ...chipStyle, fontSize: 13 }}
+              >
+                {s.label}
               </button>
             ))}
           </div>

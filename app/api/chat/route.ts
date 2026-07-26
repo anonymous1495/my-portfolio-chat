@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: groq('llama-3.1-8b-instant'),
+    model: groq('llama-3.3-70b-versatile'),
     system: `You are MrunaliLLM, a friendly assistant on Mrunali Bhangale's portfolio website.
 
 ${INSTRUCTIONS}

@@ -1,0 +1,146 @@
+{
+  "_comment": "Predefined conversation tree. Clicking a chip whose node is defined here is answered instantly from this file with no model call. When a node's followUps are empty (or all already used), the Groq API takes over from that point on. Add or edit nodes freely — 'followUps' holds the ids of the nodes to offer next.",
+
+  "starters": [
+    "projects",
+    "ai-workflow",
+    "background",
+    "artwork",
+    "current-work",
+    "contact"
+  ],
+
+  "nodes": {
+    "projects": {
+      "question": "What projects has Mrunali worked on?",
+      "answer": "Three big ones stand out. At Priority Pass she rebuilt lounge pre-booking as a native app experience — it's generated £1M in revenue and served 300k+ guests — and designed multi-membership management so people can hold several memberships in one account. Before that, she took Climate Connect Digital's first carbon credit marketplace from concept to launch in seven months.",
+      "followUps": ["pre-booking", "multi-membership", "carbon-marketplace"]
+    },
+
+    "pre-booking": {
+      "question": "Tell me about the lounge booking project",
+      "answer": "Lounges were running at 130% of pre-pandemic capacity and members kept getting turned away, but the existing pre-booking flow was an embedded web page with heavy drop-off. Digging into the data with her PM, Mrunali found the flow had been built around what the API needed rather than what travellers actually know — asking for a flight number when most people only remember their flight time. She rebuilt it natively around real booking behaviour, and it's since driven £1M in revenue and 108k+ bookings.",
+      "followUps": ["prebooking-constraint", "prebooking-learnings", "multi-membership"]
+    },
+
+    "prebooking-constraint": {
+      "question": "What was the hardest constraint?",
+      "answer": "The plan was to store bookings in the Trips feature, but the Trips API didn't ship in time for launch — so booking confirmation was about to become a dead end. Instead of forcing it, she moved bookings into the Card tab, right next to the membership card people already open at the lounge door. The constraint ended up producing something better aligned with how members actually behave on the day of travel.",
+      "followUps": []
+    },
+
+    "prebooking-learnings": {
+      "question": "What did she learn from it?",
+      "answer": "Two things. She'd map edge cases — flight not found, lounge at capacity, guest limits exceeded — before designing screens, rather than handling them reactively as they surface in review. And she'd validate assumptions about what users actually know much earlier; the flight-number insight only emerged after analysing the existing flow, when testing could have caught it up front.",
+      "followUps": []
+    },
+
+    "multi-membership": {
+      "question": "What was the multi-membership project?",
+      "answer": "Priority Pass members with more than one membership had to sign out and back in to switch — sometimes while standing at the lounge entrance. Mrunali turned a one-account-one-membership product into a scalable multi-membership platform, using a stacked-card interface so people can see what they hold and switch with a single tap. Over 60% of users activated it within two months, account support contacts dropped 30%, and four major EMEA clients migrated to the new platform.",
+      "followUps": ["stacked-cards", "mm-constraint", "pre-booking"]
+    },
+
+    "stacked-cards": {
+      "question": "Why stacked cards?",
+      "answer": "She explored a flat list, a horizontal carousel and stacked cards, then ran quick user testing. Stacked cards won because they did several jobs at once: showing how many memberships someone holds, making the active one obvious, and getting to the QR code in a single tap. It also borrowed a mental model people already have from wallet and payment apps.",
+      "followUps": []
+    },
+
+    "mm-constraint": {
+      "question": "What was tricky about it?",
+      "answer": "Ideally each membership card would show remaining entitlements, but API limitations meant that data couldn't be reliably retrieved at the card-stack level. Rather than display numbers that might be wrong, she used a clear \"No entitlements\" tag when a membership had none left. Accurate expectations beat complete-looking but unreliable data.",
+      "followUps": []
+    },
+
+    "carbon-marketplace": {
+      "question": "Tell me about the carbon marketplace",
+      "answer": "Climate Connect Digital had a portfolio of carbon projects and active enterprise clients, but the entire buying process ran on emails and spreadsheets. As the sole designer, Mrunali took their first self-serve marketplace from concept to launch in seven months — one of the fastest product turnarounds in the company's history at the time. Two partners were onboarded within the first week of the demo.",
+      "followUps": ["ccd-pivot", "ccd-research", "multi-membership"]
+    },
+
+    "ccd-pivot": {
+      "question": "What made her change direction?",
+      "answer": "User testing showed buyers didn't just need somewhere to transact — they needed enough context to trust the projects they were buying into. 60% couldn't judge project quality without visual context, and half were new to carbon offsetting entirely. That turned the inventory from a pure marketplace into something that also had to showcase project credibility, which changed what went on project cards and how project pages were structured.",
+      "followUps": []
+    },
+
+    "ccd-research": {
+      "question": "How did she validate the idea?",
+      "answer": "She ran an assumption-mapping workshop with internal and external stakeholders, scored the assumptions by risk, then turned the riskiest ones into research questions with a testing method attached to each. Unmoderated testing gave quick usability signals; moderated sessions showed how buyers actually thought while moving through the experience. It caught one critical flow problem before development — avoiding what would have been a costly rebuild.",
+      "followUps": []
+    },
+
+    "ai-workflow": {
+      "question": "How does Mrunali integrate AI in her design workflow?",
+      "answer": "She's actively experimenting with LLMs, MCPs and AI-assisted prototyping to see how emerging tech changes the way designers work — this chat is one of those experiments. It's less about generating screens and more about the thinking: mapping edge cases, surfacing assumptions, and pressure-testing decisions earlier in the process.",
+      "followUps": ["this-chatbot", "ai-gaps", "current-work"]
+    },
+
+    "this-chatbot": {
+      "question": "Is this chatbot one of her experiments?",
+      "answer": "It is — she built this to learn how LLMs behave on a real product surface rather than in a sandbox demo, including the unglamorous parts like keeping answers grounded and handling questions it shouldn't answer. For anything about how it's actually put together, she'd rather you email her directly at mrunali.db@gmail.com.",
+      "followUps": []
+    },
+
+    "ai-gaps": {
+      "question": "Where would AI help her process?",
+      "answer": "Two specific places came out of her project retros. On the lounge pre-booking project she noted AI could help identify and map edge cases earlier, before screens get designed. And AI-assisted research could surface assumptions — like whether travellers actually know their flight number — during early validation rather than after launch.",
+      "followUps": []
+    },
+
+    "background": {
+      "question": "What's Mrunali's background?",
+      "answer": "Mrunali is a Senior Product Designer and Behavioural Designer based in London, originally from India, with 6+ years across startups, agencies and enterprise products. She's currently at Collinson, designing for the Priority Pass app used by millions of members worldwide. She studied Product Design, Psychology and Innovation Management — a mix that shaped how she thinks about systems and behaviour rather than just screens.",
+      "followUps": ["experience", "education", "skills"]
+    },
+
+    "experience": {
+      "question": "Where has she worked before?",
+      "answer": "She's been at Priority Pass / Collinson since August 2023. Before that: Climate Connect Digital as a Product Designer, freelance work with Systems Innovation Hub, four years at Extentia (Merkle) designing for clients like Mahindra, Bajaj Finserv and Sony, and an early stint at L'Oréal as an Innovation Designer working on sustainable packaging.",
+      "followUps": ["projects", "skills"]
+    },
+
+    "education": {
+      "question": "What did she study?",
+      "answer": "A Bachelor in Product Design from MIT Institute of Design in India, then a Master in Innovation Management from Central Saint Martins, UAL. Alongside that she's run design workshops for MA courses at the Royal College of Art, hosted a panel at Samsung KX Hub with leaders from McKinsey and Tangerine, and had work featured in the London Transport Museum's \"Sustainable Cities of the Future\" display.",
+      "followUps": []
+    },
+
+    "skills": {
+      "question": "What is she best at?",
+      "answer": "Her strongest areas are product strategy and discovery, systems thinking, and behavioural design — framing the problem properly before jumping to screens. She's also deep in design systems, research and validation, and the delivery side: working closely with PMs and engineers through handoff, design QA and cross-platform work. Tools-wise, Figma primarily, plus HTML and CSS.",
+      "followUps": ["projects", "contact"]
+    },
+
+    "artwork": {
+      "question": "Show me images of Mrunali's work.",
+      "answer": "Outside of product work she draws and paints. Here are two face studies — one in watercolour, one in oil pastels.\n\n[[image:/projects/watercolour_face_art.png]]\n[[image:/projects/oil_pastels_face_art.png]]",
+      "followUps": ["artwork-pencil", "outside-work", "projects"]
+    },
+
+    "artwork-pencil": {
+      "question": "Show me the pencil sketch",
+      "answer": "Here's the pencil one — a bit more restrained than the painted studies, and a good example of the observational drawing habit that feeds back into her design work.\n\n[[image:/projects/pencil_sketch_face_art.png]]",
+      "followUps": ["outside-work"]
+    },
+
+    "outside-work": {
+      "question": "What does she do outside work?",
+      "answer": "She travels, boulders, and spends a lot of time exploring cafés and cities, collecting inspiration from architecture, products and overlooked everyday details. She calls coffee, chilli and chocolate the \"3 C's\" of her life, and she's a serial DIYer. She also speaks four languages.",
+      "followUps": []
+    },
+
+    "current-work": {
+      "question": "What is Mrunali currently working on?",
+      "answer": "Right now she's designing the travel assistant for the Priority Pass mobile app. She's also picking the full Trips experience back up — the API that wasn't ready during the original pre-booking project became available in June 2026, so finding, booking and saving lounge visits can finally come together into one end-to-end journey.",
+      "followUps": ["multi-membership", "ai-workflow", "contact"]
+    },
+
+    "contact": {
+      "question": "How can I contact Mrunali?",
+      "answer": "The best way is email — mrunali.db@gmail.com. She's also on LinkedIn at linkedin.com/in/mrunali-bhangale. If you're a recruiter or looking to work together, do reach out; she's happy to talk through any of this work in more detail.",
+      "followUps": []
+    }
+  }
+}
