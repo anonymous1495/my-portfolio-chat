@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     .join('\n');
 
   const result = await generateText({
-    model: groq('llama-3.3-70b-versatile'),
+    model: groq('llama-3.1-8b-instant'),
     prompt: `Based on this conversation on Mrunali's portfolio site, suggest 3 short follow-up questions a visitor might naturally ask next.
 
 Conversation:
