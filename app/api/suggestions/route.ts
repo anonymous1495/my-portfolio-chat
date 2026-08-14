@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await generateText({
-      model: groq('llama-3.3-70b-versatile'),
+      model: groq('qwen/qwen3.6-27b'),
       prompt: `Based on this conversation on Mrunali's portfolio site, suggest 3 short follow-up questions a visitor might naturally ask next.
 
 Conversation so far:
