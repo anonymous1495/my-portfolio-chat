@@ -115,7 +115,10 @@ export default function Chat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: updatedMessages }),
       });
-      const reply = await response.text();
+      if (!response.ok) throw new Error(`Chat request failed (${response.status}).`);
+
+      const reply = (await response.text()).trim();
+      if (!reply) throw new Error('The chatbot returned an empty reply.');
       const withReply: Message[] = [...updatedMessages, { role: 'assistant', content: reply }];
       setMessages(withReply);
       fetchSuggestions(withReply);
